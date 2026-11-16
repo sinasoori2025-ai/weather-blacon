@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07111f">
+    <meta name="description" content="SINA WEATHER personal weather station dashboard">
+    <title>SINA WEATHER | Personal Weather Station</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-shell" id="weatherApp" data-weather="cloudy" data-mode="automatic">
+
+    <!-- =====================================================
+         LEFT SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">
+                <span>S</span>
+            </div>
+
+            <div class="brand-information">
+                <strong>SINA WEATHER</strong>
+                <small>PERSONAL WEATHER STATION</small>
+            </div>
+        </div>
+
+        <div class="sidebar-section-label">WORKSPACE</div>
+
+        <nav class="navigation">
+
+            <a href="#home" class="nav-link active" data-section="home">
+                <span class="nav-icon">⌂</span>
+                <span>Overview</span>
+            </a>
+
+            <a href="#forecast" class="nav-link" data-section="forecast">
+                <span class="nav-icon">◷</span>
+                <span>Forecast</span>
+            </a>
+
+            <a href="#weekly" class="nav-link" data-section="weekly">
+                <span class="nav-icon">▦</span>
+                <span>Weekly Schedule</span>
+            </a>
+
+            <a href="#analytics" class="nav-link" data-section="analytics">
+                <span class="nav-icon">⌁</span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="#station" class="nav-link" data-section="station">
+                <span class="nav-icon">⌘</span>
+                <span>Weather Station</span>
+            </a>
+
+            <a href="#settings" class="nav-link" data-section="settings">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="sidebar-station-card">
+            <div class="sidebar-station-top">
+                <span class="status-indicator" id="sidebarStatusIndicator"></span>
+                <span id="sidebarConnectionText">Station offline</span>
+            </div>
+
+            <div class="sidebar-station-name">
+                Personal Station
+            </div>
+
+            <small>ESP8266 · DHT11</small>
+        </div>
+
+        <div class="sidebar-profile">
+            <div class="profile-avatar">S</div>
+
+            <div class="profile-information">
+                <strong>Personal Dashboard</strong>
+                <small>Local weather system</small>
+            </div>
+
+            <span class="profile-menu-icon">•••</span>
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content" id="home">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div class="topbar-heading">
+                <div class="eyebrow">PERSONAL WEATHER DASHBOARD</div>
+                <h1>Weather Overview</h1>
+                <p>Your local atmosphere, in real time.</p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <div class="clock-card">
+                    <span class="clock-label">LOCAL TIME</span>
+                    <strong id="clockLabel">--:--:--</strong>
+                    <small id="dateLabel">Loading date...</small>
+                </div>
+
+                <div class="connection-pill" id="sensorStatus" data-status="disconnected">
+                    <span class="connection-dot"></span>
+                    <span id="sensorStatusText">Station offline</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             MAIN WEATHER HERO
+        ================================================== -->
+
+        <section class="weather-hero" id="weatherHero">
+
+            <div class="hero-background"></div>
+
+            <div class="weather-scene" id="weatherScene" aria-hidden="true">
+
+                <div class="scene-cloud cloud-one"></div>
+                <div class="scene-cloud cloud-two"></div>
+
+            </div>
+
+            <div class="hero-content">
+
+                <div class="hero-topline">
+
+                    <div class="live-indicator">
+                        <span></span>
+                        LIVE WEATHER
+                    </div>
+
+                    <div class="hero-location">
+                        PERSONAL WEATHER STATION
+                    </div>
+
+                </div>
+
+
+                <div class="hero-main">
+
+                    <div class="hero-weather-information">
+
+                        <div class="hero-temperature">
+                            <span id="heroTemp">--</span>
+                            <sup>°</sup>
+                        </div>
+
+                        <h2 id="heroCondition">Cloudy</h2>
+
+                        <p id="weatherDescription">
+                            Waiting for weather information.
+                        </p>
+
+                        <div class="hero-extra-information">
+                            <span id="heroUpdated">Waiting for first reading</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-icon-container">
+
+                        <div class="hero-weather-icon" id="heroIcon">
+                            ☁
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-details">
+
+                    <div class="hero-detail-item">
+                        <span class="detail-label">FEELS LIKE</span>
+                        <strong id="feelsLike">--°</strong>
+                    </div>
+
+                    <div class="hero-detail-item">
+                        <span class="detail-label">HUMIDITY</span>
+                        <strong id="heroHumidity">--%</strong>
+                    </div>
+
+                    <div class="hero-detail-item">
+                        <span class="detail-label">WIND SPEED</span>
+                        <strong id="heroWind">N/A</strong>
+                    </div>
+
+                    <div class="hero-detail-item">
+                        <span class="detail-label">RAINFALL</span>
+                        <strong id="heroRain">N/A</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="hero-footer">
+
+                    <div class="hero-mode">
+                        <span class="hero-mode-dot"></span>
+                        <span id="modeLabel">AUTOMATIC MODE</span>
+                    </div>
+
+                    <div class="hero-schedule-status" id="scheduleStatus">
+                        Waiting for sensor
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MODE CONTROL
+        ================================================== -->
+
+        <section class="mode-panel glass-panel">
+
+            <div class="mode-description">
+
+                <div class="section-eyebrow">WEATHER CONTROL</div>
+
+                <h2>Control Mode</h2>
+
+                <p>
+                    Select automatic sensor control or your personal weekly weather plan.
+                </p>
+
+            </div>
+
+
+            <div class="mode-switch" id="modeSwitch">
+
+                <button
+                    class="mode-button active"
+                    type="button"
+                    data-mode="automatic">
+
+                    <span class="mode-button-icon">⌁</span>
+                    Automatic
+
+                </button>
+
+
+                <button
+                    class="mode-button"
+                    type="button"
+                    data-mode="schedule">
+
+                    <span class="mode-button-icon">◷</span>
+                    Schedule
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CURRENT WEATHER METRICS
+        ================================================== -->
+
+        <section class="content-section" id="forecast">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-eyebrow">ATMOSPHERIC CONDITIONS</div>
+                    <h2>Weather Details</h2>
+                </div>
+
+                <div class="section-heading-status" id="dataSource">
+                    Waiting for ESP8266
+                </div>
+
+            </div>
+
+
+            <div class="metrics-grid">
+
+                <article class="metric-card">
+
+                    <div class="metric-card-top">
+                        <div class="metric-icon temperature-icon">℃</div>
+                        <span class="metric-status">LIVE</span>
+                    </div>
+
+                    <div class="metric-name">Temperature</div>
+
+                    <strong class="metric-value" id="sensorTemperature">
+                        --°
+                    </strong>
+
+                    <small>Measured by DHT11</small>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-card-top">
+                        <div class="metric-icon humidity-icon">％</div>
+                        <span class="metric-status">LIVE</span>
+                    </div>
+
+                    <div class="metric-name">Humidity</div>
+
+                    <strong class="metric-value" id="sensorHumidity">
+                        --%
+                    </strong>
+
+                    <small>Measured by DHT11</small>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-card-top">
+                        <div class="metric-icon wind-icon">↗</div>
+                        <span class="metric-status unavailable">NOT CONNECTED</span>
+                    </div>
+
+                    <div class="metric-name">Wind Speed</div>
+
+                    <strong class="metric-value" id="sensorWind">
+                        N/A
+                    </strong>
+
+                    <small>Wind sensor unavailable</small>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-card-top">
+                        <div class="metric-icon rain-icon">◌</div>
+                        <span class="metric-status unavailable">NOT CONNECTED</span>
+                    </div>
+
+                    <div class="metric-name">Rainfall</div>
+
+                    <strong class="metric-value" id="sensorRainfall">
+                        N/A
+                    </strong>
+
+                    <small>Rain sensor unavailable</small>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             WEEKLY WEATHER SCHEDULE
+        ================================================== -->
+
+        <section class="content-section" id="weekly">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-eyebrow">RECURRING WEATHER PLAN</div>
+                    <h2>Weekly Schedule</h2>
+                    <p class="section-description">
+                        Create your own weather timeline from Saturday to Friday.
+                    </p>
+                </div>
+
+                <div class="weekly-current-day" id="todayBadge">
+                    TODAY
+                </div>
+
+            </div>
+
+
+            <!-- WEEK SELECTOR -->
+
+            <div class="weekly-days" id="weeklyForecast">
+
+                <!-- JavaScript generates seven weekday cards -->
+
+            </div>
+
+
+            <!-- DAY EDITOR -->
+
+            <div class="schedule-editor glass-panel">
+
+                <div class="schedule-editor-header">
+
+                    <div>
+                        <div class="section-eyebrow">DAY CONFIGURATION</div>
+
+                        <h3 id="selectedDayTitle">
+                            Saturday
+                        </h3>
+
+                        <p>
+                            Add multiple weather conditions and times for this day.
+                        </p>
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="clearDayButton">
+
+                        Clear day
+
+                    </button>
+
+                </div>
+
+
+                <!-- ADD EVENT FORM -->
+
+                <form id="scheduleForm" class="schedule-form">
+
+                    <div class="form-group">
+
+                        <label for="eventTime">Time</label>
+
+                        <input
+                            type="time"
+                            id="eventTime"
+                            name="eventTime"
+                            value="08:00"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="eventCondition">Weather condition</label>
+
+                        <select
+                            id="eventCondition"
+                            name="eventCondition"
+                            required>
+
+                            <option value="sunny">Sunny</option>
+                            <option value="partly-cloudy">Partly cloudy</option>
+                            <option value="cloudy">Cloudy</option>
+                            <option value="cloudy-windy">Cloudy and windy</option>
+                            <option value="rain">Rain</option>
+                            <option value="heavy-rain">Heavy rain</option>
+                            <option value="thunderstorm">Thunderstorm</option>
+                            <option value="snow">Snow</option>
+                            <option value="heavy-snow">Heavy snow</option>
+                            <option value="fog">Fog</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="eventTemp">Temperature °C</label>
+
+                        <input
+                            type="number"
+                            id="eventTemp"
+                            name="eventTemp"
+                            min="-50"
+                            max="60"
+                            placeholder="Optional">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="eventHumidity">Humidity %</label>
+
+                        <input
+                            type="number"
+                            id="eventHumidity"
+                            name="eventHumidity"
+                            min="0"
+                            max="100"
+                            placeholder="Optional">
+
+                    </div>
+
+
+                    <div class="form-group form-submit-group">
+
+                        <label class="invisible-label">Add</label>
+
+                        <button
+                            type="submit"
+                            class="primary-button">
+
+                            <span>＋</span>
+                            Add Weather
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <!-- SCHEDULE EVENTS -->
+
+                <div class="schedule-list-heading">
+
+                    <h4>Scheduled Events</h4>
+
+                    <span id="selectedDayEventCount">
+                        0 EVENTS
+                    </span>
+
+                </div>
+
+
+                <div class="schedule-list" id="scheduleList">
+
+                    <div class="empty-state">
+                        No weather events have been added for this day.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ANALYTICS
+        ================================================== -->
+
+        <section class="content-section" id="analytics">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-eyebrow">WEATHER MONITORING</div>
+                    <h2>Station Analytics</h2>
+                </div>
+
+                <span class="section-heading-status">
+                    Local reading history
+                </span>
+
+            </div>
+
+
+            <div class="analytics-grid">
+
+                <article class="chart-card glass-panel">
+
+                    <div class="chart-header">
+                        <div>
+                            <h3>Temperature History</h3>
+                            <p>Recent ESP8266 readings</p>
+                        </div>
+
+                        <span class="chart-unit">°C</span>
+                    </div>
+
+                    <canvas
+                        id="temperatureChart"
+                        height="180">
+                    </canvas>
+
+                </article>
+
+
+                <article class="chart-card glass-panel">
+
+                    <div class="chart-header">
+                        <div>
+                            <h3>Humidity History</h3>
+                            <p>Recent ESP8266 readings</p>
+                        </div>
+
+                        <span class="chart-unit">%</span>
+                    </div>
+
+                    <canvas
+                        id="humidityChart"
+                        height="180">
+                    </canvas>
+
+                </article>
+
+            </div>
+
+
+            <!-- WIND VISUAL -->
+
+            <div class="wind-panel glass-panel">
+
+                <div class="wind-information">
+
+                    <div class="section-eyebrow">WIND VISUALIZATION</div>
+
+                    <h3>Wind Activity</h3>
+
+                    <p id="windDescription">
+                        Wind speed sensor is not connected.
+                    </p>
+
+                    <small>
+                        The visual indicator becomes active when real wind data is available.
+                    </small>
+
+                </div>
+
+
+                <div class="wind-tree-area">
+
+                    <div class="wind-tree" id="windTree">
+                        ♣
+                    </div>
+
+                    <span>WIND INDICATOR</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ESP8266 WEATHER STATION
+        ================================================== -->
+
+        <section class="content-section" id="station">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-eyebrow">HARDWARE MANAGEMENT</div>
+                    <h2>Weather Station</h2>
+                </div>
+
+                <span class="section-heading-status" id="sensorLastSeen">
+                    No readings received
+                </span>
+
+            </div>
+
+
+            <div class="station-panel glass-panel">
+
+                <div class="station-information">
+
+                    <div class="station-device-icon">
+                        ⌘
+                    </div>
+
+                    <div class="station-device-tag">
+                        ESP8266 · DHT11
+                    </div>
+
+                    <h3>Personal Weather Station</h3>
+
+                    <p>
+                        Connect your ESP8266 to receive temperature and humidity
+                        measurements directly from the local network.
+                    </p>
+
+
+                    <div class="station-specifications">
+
+                        <div>
+                            <span>DEVICE</span>
+                            <strong>ESP8266</strong>
+                        </div>
+
+                        <div>
+                            <span>SENSOR</span>
+                            <strong>DHT11</strong>
+                        </div>
+
+                        <div>
+                            <span>UPDATE RATE</span>
+                            <strong>5 seconds</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="station-connection">
+
+                    <div class="section-eyebrow">CONNECTION SETTINGS</div>
+
+                    <h3>Connect your device</h3>
+
+                    <form id="sensorForm">
+
+                        <div class="form-group">
+
+                            <label for="sensorIP">
+                                ESP8266 IP Address
+                            </label>
+
+                            <input
+                                type="text"
+                                id="sensorIP"
+                                name="sensorIP"
+                                value="192.168.1.110"
+                                placeholder="192.168.1.110"
+                                autocomplete="off"
+                                required>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="primary-button connect-button"
+                            id="connectSensor">
+
+                            Connect Station
+
+                        </button>
+
+                    </form>
+
+
+                    <div class="endpoint-information">
+
+                        <span>API ENDPOINT</span>
+
+                        <code id="sensorEndpoint">
+                            http://192.168.1.110/api/data
+                        </code>
+
+                    </div>
+
+
+                    <div class="sensor-feedback" id="sensorFeedback">
+                        Waiting for connection.
+                    </div>
+
+
+                    <div class="sensor-last-update">
+                        <span class="connection-dot"></span>
+                        <span id="connectionDetails">
+                            Device has not been connected yet.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- HARDWARE DATA LIMITATIONS -->
+
+            <div class="hardware-note">
+
+                <span class="hardware-note-icon">ⓘ</span>
+
+                <div>
+                    <strong>Sensor information</strong>
+
+                    <p>
+                        The current ESP8266 firmware reads temperature and humidity
+                        from DHT11. Wind speed, rainfall, pressure, UV and visibility
+                        are not available unless additional sensors are installed.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SETTINGS
+        ================================================== -->
+
+        <section class="content-section" id="settings">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-eyebrow">APPLICATION PREFERENCES</div>
+                    <h2>Settings</h2>
+                </div>
+
+            </div>
+
+
+            <div class="settings-panel glass-panel">
+
+                <div class="setting-row">
+
+                    <div class="setting-information">
+                        <strong>Weather animations</strong>
+                        <small>
+                            Enable animated clouds, rain, snow, fog and lightning.
+                        </small>
+                    </div>
+
+                    <label class="toggle-control">
+                        <input
+                            type="checkbox"
+                            id="animationToggle"
+                            checked>
+
+                        <span class="toggle-slider"></span>
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-information">
+                        <strong>Sound effects</strong>
+                        <small>
+                            Enable optional sound effects for weather changes.
+                        </small>
+                    </div>
+
+                    <label class="toggle-control">
+                        <input
+                            type="checkbox"
+                            id="soundToggle">
+
+                        <span class="toggle-slider"></span>
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-information">
+                        <strong>Automatic sensor updates</strong>
+                        <small>
+                            Poll the ESP8266 every five seconds.
+                        </small>
+                    </div>
+
+                    <span class="setting-value">
+                        5 SEC
+                    </span>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div class="setting-information">
+                        <strong>Weekly schedule</strong>
+                        <small>
+                            Your schedule repeats every week and is saved locally.
+                        </small>
+                    </div>
+
+                    <span class="setting-value">
+                        ENABLED
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer class="main-footer">
+
+            <div class="footer-brand">
+                SINA WEATHER
+            </div>
+
+            <span>PERSONAL WEATHER STATION</span>
+
+            <span>LOCAL DASHBOARD</span>
+
+        </footer>
+
+    </main>
+
+
+    <!-- =====================================================
+         RIGHT SIDEBAR
+    ====================================================== -->
+
+    <aside class="right-sidebar">
+
+        <div class="right-sidebar-heading">
+            <span>LIVE MONITOR</span>
+            <span class="right-live-dot"></span>
+        </div>
+
+
+        <!-- CONNECTION CARD -->
+
+        <article class="right-card station-status-card">
+
+            <div class="right-card-label">
+                STATION STATUS
+            </div>
+
+            <div class="station-status-symbol" id="rightStationOrb">
+                ●
+            </div>
+
+            <h3 id="rightStationStatus">
+                Offline
+            </h3>
+
+            <p id="rightStationText">
+                Waiting for ESP8266 connection.
+            </p>
+
+        </article>
+
+
+        <!-- TEMPERATURE -->
+
+        <article class="right-card side-reading-card">
+
+            <div class="right-card-label">
+                TEMPERATURE
+            </div>
+
+            <strong id="rightTemperature">
+                --°
+            </strong>
+
+            <small>Current sensor reading</small>
+
+        </article>
+
+
+        <!-- HUMIDITY -->
+
+        <article class="right-card side-reading-card">
+
+            <div class="right-card-label">
+                HUMIDITY
+            </div>
+
+            <strong id="rightHumidity">
+                --%
+            </strong>
+
+            <small>Current sensor reading</small>
+
+        </article>
+
+
+        <!-- WIND -->
+
+        <article class="right-card side-reading-card">
+
+            <div class="right-card-label">
+                WIND SPEED
+            </div>
+
+            <strong id="rightWind">
+                N/A
+            </strong>
+
+            <small>No wind sensor connected</small>
+
+        </article>
+
+
+        <!-- INFORMATION -->
+
+        <div class="right-information-card">
+
+            <div class="right-information-icon">
+                ⓘ
+            </div>
+
+            <p>
+                Automatic weather mode uses humidity thresholds to create
+                visual weather conditions. Humidity alone cannot confirm
+                actual rainfall or predict a storm.
+            </p>
+
+        </div>
+
+
+        <!-- SYSTEM INFORMATION -->
+
+        <div class="right-system-information">
+
+            <div>
+                <span>APPLICATION</span>
+                <strong>SINA WEATHER</strong>
+            </div>
+
+            <div>
+                <span>DEVICE</span>
+                <strong>ESP8266</strong>
+            </div>
+
+            <div>
+                <span>TIME SOURCE</span>
+                <strong>LOCAL DEVICE</strong>
+            </div>
+
+        </div>
+
+    </aside>
+
+</div>
+
+</body>
+</html>
